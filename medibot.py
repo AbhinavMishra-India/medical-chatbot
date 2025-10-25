@@ -65,7 +65,11 @@ def main():
                 st.error("Failed to load the vector store")
 
             GROQ_MODEL_NAME="llama-3.1-8b-instant"   #or "llama-3.2-3b-preview"
-            GROQ_API_KEY=os.environ.get("GROQ_API_KEY")
+
+            # GROQ_API_KEY=os.environ.get("GROQ_API_KEY")        #Use this for local testing
+
+            GROQ_API_KEY = st.secrets['GROQ_API_KEY']  # Use this for deployment on Streamlit Cloud
+
             llm = ChatGroq(
                 model_name=GROQ_MODEL_NAME,
                 api_key=GROQ_API_KEY,
