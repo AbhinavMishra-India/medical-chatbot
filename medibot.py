@@ -2,17 +2,17 @@ import os
 import streamlit as st
 
 from langchain_huggingface import HuggingFaceEmbeddings
-from langchain.chains import RetrievalQA
-
 from langchain_community.vectorstores import FAISS
 from langchain_core.prompts import PromptTemplate
-from langchain_huggingface import HuggingFaceEndpoint
 from langchain_groq import ChatGroq
+from langchain import hub
+from langchain.chains import create_retrieval_chain
+from langchain.chains.combine_documents import create_stuff_documents_chain
 
 
 ## Uncomment the following files if you're not using pipenv as your virtual environment manager
-#from dotenv import load_dotenv, find_dotenv
-#load_dotenv(find_dotenv())
+from dotenv import load_dotenv
+load_dotenv()
 
 
 DB_FAISS_PATH="vectorstore/db_faiss"
@@ -26,16 +26,6 @@ def get_vectorstore():
 def set_custom_prompt(custom_prompt_template):
     prompt=PromptTemplate(template=custom_prompt_template, input_variables=["context", "question"])
     return prompt
-
-
-def load_llm(huggingface_repo_id, HF_TOKEN):
-    llm=HuggingFaceEndpoint(
-        repo_id=huggingface_repo_id,
-        temperature=0.5,
-        model_kwargs={"token":HF_TOKEN,
-                      "max_length":"512"}
-    )
-    return llm
 
 
 def main():
@@ -74,26 +64,31 @@ def main():
             if vectorstore is None:
                 st.error("Failed to load the vector store")
 
-            qa_chain = RetrievalQA.from_chain_type(
-                llm=ChatGroq(
-                    model_name="meta-llama/llama-4-maverick-17b-128e-instruct",  # free, fast Groq-hosted model
-                    temperature=0.0,
-                    groq_api_key=os.environ["GROQ_API_KEY"],
-                ),
-                chain_type="stuff",
-                retriever=vectorstore.as_retriever(search_kwargs={'k':3}),
-                return_source_documents=True,
-                chain_type_kwargs={'prompt': set_custom_prompt(CUSTOM_PROMPT_TEMPLATE)}
+            GROQ_MODEL_NAME="llama-3.1-8b-instant"   #or "llama-3.2-3b-preview"
+            GROQ_API_KEY=os.environ.get("GROQ_API_KEY")
+            llm = ChatGroq(
+                model_name=GROQ_MODEL_NAME,
+                api_key=GROQ_API_KEY,
+                temperature=0.5,
+                max_tokens=512
             )
 
-            response=qa_chain.invoke({'query':prompt})
+            retrieval_qa_chat_prompt = hub.pull("langchain-ai/retrieval-qa-chat")
 
-            result=response["result"]
-            source_documents=response["source_documents"]
-            result_to_show=result+"\nSource Docs:\n"+str(source_documents)
-            #response="Hi, I am MediBot!"
-            st.chat_message('assistant').markdown(result_to_show)
-            st.session_state.messages.append({'role':'assistant', 'content': result_to_show})
+            #Document Combining Chain (stuff documents into prompt)
+            combine_docs_chain = create_stuff_documents_chain(llm,retrieval_qa_chat_prompt)
+
+            #Retrieval chain (retriever + doc combiner)
+            rag_chain = create_retrieval_chain(vectorstore.as_retriever(search_kwargs={'k' : 3}), combine_docs_chain)
+
+            response=rag_chain.invoke({'input': prompt})
+
+            result=response["answer"]
+            print ("\nSOURCE DOCUMENTS:")
+            for doc in response["context"]:
+                print(f"- {doc.metadata} -> {doc.page_content[:200]}...")
+            st.chat_message('assistant').markdown(result)
+            st.session_state.messages.append({'role':'assistant', 'content': result})
 
         except Exception as e:
             st.error(f"Error: {str(e)}")
