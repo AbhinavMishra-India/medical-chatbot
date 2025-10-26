@@ -1,5 +1,9 @@
 # Medical Chatbot
 
+## Links
+- **Live Demo:** [Streamlit App](https://abhinavmishra.streamlit.app/)
+- **GitHub Repository:** [github.com/AbhinavMishra-India/medical-chatbot](https://github.com/AbhinavMishra-India/medical-chatbot)
+
 An intelligent medical chatbot that leverages LLMs (Large Language Models) and vector search to answer medical queries using information from the Gale Encyclopedia of Medicine.
 
 ## Features

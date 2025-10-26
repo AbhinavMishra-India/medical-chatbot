@@ -29,15 +29,64 @@ def set_custom_prompt(custom_prompt_template):
 
 
 def main():
-    st.title("Ask Chatbot!")
+    # Custom CSS for background and chat container
+    st.markdown(
+        """
+        <style>
+        body {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%) !important;
+        }
+        .stChatMessage, .stTextInput, .stButton {
+            border-radius: 12px !important;
+        }
+        .stChatMessage {
+            background: rgba(255,255,255,0.07) !important;
+            padding: 1em !important;
+            margin-bottom: 0.5em !important;
+        }
+        .stTextInput>div>input {
+            background: #f0f4fa !important;
+            color: #222 !important;
+            border-radius: 8px !important;
+            border: 1px solid #2a5298 !important;
+        }
+        .stButton>button {
+            background: #2a5298 !important;
+            color: #fff !important;
+            border-radius: 8px !important;
+        }
+        .medical-icon {
+            display: block;
+            margin: 0 auto 1em auto;
+            width: 60px;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
+    st.sidebar.image("https://cdn-icons-png.flaticon.com/512/3774/3774299.png", width=80)
+    st.sidebar.title("Medical Chatbot")
+    st.sidebar.markdown("""
+    **Welcome!**
+    
+    - Ask any medical question.
+    - Answers are sourced from the Gale Encyclopedia of Medicine.
+    - Your privacy is respected.
+    """)
+
+    st.markdown('<img src="https://cdn-icons-png.flaticon.com/512/3774/3774299.png" class="medical-icon" />', unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align: center; color: #fff;'>Ask Medical Chatbot!</h1>", unsafe_allow_html=True)
 
     if 'messages' not in st.session_state:
         st.session_state.messages = []
 
-    for message in st.session_state.messages:
-        st.chat_message(message['role']).markdown(message['content'])
+    chat_container = st.container()
+    with chat_container:
+        for message in st.session_state.messages:
+            st.chat_message(message['role']).markdown(message['content'])
 
-    prompt=st.chat_input("Pass your prompt here")
+    prompt=st.chat_input("Type your medical question...")
 
     if prompt:
         st.chat_message('user').markdown(prompt)
