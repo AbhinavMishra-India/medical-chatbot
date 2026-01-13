@@ -20,6 +20,18 @@ An intelligent medical chatbot that leverages LLMs (Large Language Models) and v
 - `data/`: Contains the Gale Encyclopedia of Medicine PDF
 - `vectorstore/`: Stores FAISS vector database files
 
+
+## Environment Variables & Secrets Management
+
+This project uses API keys and secrets for LLM access. These should not be committed to version control. Use the following files:
+
+- `.env`: For local development, store environment variables (e.g., `GROQ_API_KEY`) here. This file is ignored by git.
+- `.streamlit/secrets.toml`: For Streamlit Cloud deployment, add secrets (e.g., `GROQ_API_KEY`) here. This file is also ignored by git.
+
+**Never share or commit your API keys or secrets.**
+
+---
+
 ## Setup Instructions
 
 ### 1. Prerequisite: Install Pipenv

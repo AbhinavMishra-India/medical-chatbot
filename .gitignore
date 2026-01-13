@@ -1,0 +1,11 @@
+# macOS
+.DS_Store
+# Environment variables
+.env
+# Streamlit secrets/config
+.streamlit/
+# Python virtual environment
+.venv/
+# Other potential ignores (adjust as needed)
+*.log
+__pycache__/

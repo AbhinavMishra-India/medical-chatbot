@@ -71,9 +71,12 @@ def main():
     **Welcome!**
     
     - Ask any medical question.
-    - Answers are sourced from the Gale Encyclopedia of Medicine.
+    - Answers are sourced from reliable and authoritative medical reference materials.
     - Your privacy is respected.
     """)
+    # Add New Chat button
+    if st.sidebar.button("🆕 New Chat"):
+        st.session_state.messages = []
 
     st.markdown('<img src="https://cdn-icons-png.flaticon.com/512/3774/3774299.png" class="medical-icon" />', unsafe_allow_html=True)
     st.markdown("<h1 style='text-align: center; color: #fff;'>Ask Medical Chatbot!</h1>", unsafe_allow_html=True)
@@ -92,7 +95,14 @@ def main():
         st.chat_message('user').markdown(prompt)
         st.session_state.messages.append({'role':'user', 'content': prompt})
 
-        CUSTOM_PROMPT_TEMPLATE = """
+        try:
+            vectorstore = get_vectorstore()
+            if vectorstore is None:
+                st.error("Failed to load the vector store")
+                return
+
+
+            CUSTOM_PROMPT_TEMPLATE = """
                 Use the pieces of information provided in the context to answer user's question.
                 If you dont know the answer, just say that you dont know, dont try to make up an answer. 
                 Dont provide anything out of the given context
@@ -102,22 +112,10 @@ def main():
 
                 Start the answer directly. No small talk please.
                 """
-        
-        #HUGGINGFACE_REPO_ID="mistralai/Mistral-7B-Instruct-v0.3" # PAID
-        #HF_TOKEN=os.environ.get("HF_TOKEN")  
 
-        #TODO: Create a Groq API key and add it to .env file
-        
-        try: 
-            vectorstore=get_vectorstore()
-            if vectorstore is None:
-                st.error("Failed to load the vector store")
-
-            GROQ_MODEL_NAME="llama-3.1-8b-instant"   #or "llama-3.2-3b-preview"
-
-            # GROQ_API_KEY=os.environ.get("GROQ_API_KEY")        #Use this for local testing
-
+            GROQ_MODEL_NAME = "llama-3.1-8b-instant"   # or "llama-3.2-3b-preview"
             GROQ_API_KEY = st.secrets['GROQ_API_KEY']  # Use this for deployment on Streamlit Cloud
+            # GROQ_API_KEY = os.environ.get("GROQ_API_KEY")  # Use this for local testing
 
             llm = ChatGroq(
                 model_name=GROQ_MODEL_NAME,
@@ -127,21 +125,19 @@ def main():
             )
 
             retrieval_qa_chat_prompt = hub.pull("langchain-ai/retrieval-qa-chat")
+            # Document Combining Chain (stuff documents into prompt)
+            combine_docs_chain = create_stuff_documents_chain(llm, retrieval_qa_chat_prompt)
+            # Retrieval chain (retriever + doc combiner)
+            rag_chain = create_retrieval_chain(vectorstore.as_retriever(search_kwargs={'k': 3}), combine_docs_chain)
 
-            #Document Combining Chain (stuff documents into prompt)
-            combine_docs_chain = create_stuff_documents_chain(llm,retrieval_qa_chat_prompt)
+            response = rag_chain.invoke({'input': prompt})
 
-            #Retrieval chain (retriever + doc combiner)
-            rag_chain = create_retrieval_chain(vectorstore.as_retriever(search_kwargs={'k' : 3}), combine_docs_chain)
-
-            response=rag_chain.invoke({'input': prompt})
-
-            result=response["answer"]
-            print ("\nSOURCE DOCUMENTS:")
+            result = response["answer"]
+            print("\nSOURCE DOCUMENTS:")
             for doc in response["context"]:
                 print(f"- {doc.metadata} -> {doc.page_content[:200]}...")
             st.chat_message('assistant').markdown(result)
-            st.session_state.messages.append({'role':'assistant', 'content': result})
+            st.session_state.messages.append({'role': 'assistant', 'content': result})
 
         except Exception as e:
             st.error(f"Error: {str(e)}")

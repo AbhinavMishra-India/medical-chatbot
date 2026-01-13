@@ -1,0 +1,71 @@
+disease,symptoms,treatment
+Diabetes,"Increased thirst, frequent urination, fatigue","Insulin therapy, diet management, exercise"
+Hypertension,"Headache, dizziness, blurred vision","Lifestyle changes, antihypertensive drugs"
+Asthma,"Shortness of breath, wheezing, chest tightness","Inhalers, corticosteroids, avoiding triggers"
+Pneumonia,"Cough, fever, chest pain","Antibiotics, rest, fluids"
+Dermatitis,"Itchy skin, redness, rash","Topical creams, antihistamines, avoiding irritants"
+Migraine,"Severe headache, nausea, sensitivity to light","Pain relievers, triptans, rest in dark room"
+COVID-19,"Fever, cough, loss of taste/smell","Supportive care, antivirals, isolation"
+Anemia,"Fatigue, pale skin, weakness","Iron supplements, dietary changes"
+Arthritis,"Joint pain, swelling, stiffness","Pain management, physical therapy, anti-inflammatory drugs"
+Tuberculosis,"Persistent cough, weight loss, night sweats","Antibiotics, long-term treatment"
+COVID-19	Fever, cough, loss of taste or smell, fatigue	Antivirals, rest, fluids, oxygen therapy
+Tuberculosis	Persistent cough, weight loss, night sweats, fever	Long-term antibiotics, medical supervision
+Malaria	Fever, chills, sweating, headache	Antimalarial medications
+Anemia	Fatigue, weakness, pale skin, shortness of breath	Iron supplements, dietary changes
+Migraine	Severe headache, nausea, light sensitivity	Pain relievers, preventive medications
+Arthritis	Joint pain, stiffness, swelling	Pain management, physiotherapy, anti-inflammatory drugs
+Hepatitis	Jaundice, fatigue, abdominal pain, nausea	Antiviral drugs, supportive care
+Depression	Persistent sadness, loss of interest, sleep issues	Therapy, antidepressant medications
+Epilepsy	Seizures, confusion, loss of awareness	Anti-seizure medications
+Chronic Kidney Disease	Swelling, fatigue, changes in urination	Diet control, medications, dialysis
+Common Cold	Sneezing, runny nose, sore throat, mild fever	Rest, fluids, decongestants
+Influenza	High fever, body aches, chills, fatigue	Antiviral drugs, rest, hydration
+Dengue	High fever, severe headache, joint pain, rash	Fluid replacement, pain management
+Typhoid	Prolonged fever, abdominal pain, weakness	Antibiotics, hydration
+Cholera	Severe diarrhea, dehydration, vomiting	Oral rehydration salts, antibiotics
+Bronchitis	Cough with mucus, chest discomfort, fatigue	Rest, bronchodilators, fluids
+COPD	Chronic cough, breathlessness, wheezing	Inhalers, oxygen therapy, lifestyle changes
+Sinusitis	Facial pain, nasal congestion, headache	Decongestants, antibiotics if bacterial
+Otitis Media	Ear pain, hearing difficulty, fever	Antibiotics, pain relievers
+Gastritis	Stomach pain, nausea, bloating	Antacids, dietary changes
+Peptic Ulcer	Burning stomach pain, nausea, bloating	Antibiotics, acid reducers
+GERD	Heartburn, acid reflux, chest discomfort	Lifestyle changes, proton pump inhibitors
+Irritable Bowel Syndrome	Abdominal pain, bloating, altered bowel habits	Diet management, stress reduction
+Crohn’s Disease	Diarrhea, abdominal pain, weight loss	Anti-inflammatory drugs, immunosuppressants
+Ulcerative Colitis	Bloody diarrhea, abdominal cramps, fatigue	Anti-inflammatory drugs, surgery
+Celiac Disease	Diarrhea, weight loss, bloating	Gluten-free diet
+Obesity	Excess body weight, fatigue, joint pain	Diet, exercise, behavioral therapy
+Hypothyroidism	Weight gain, cold intolerance, fatigue	Thyroid hormone replacement
+Hyperthyroidism	Weight loss, rapid heartbeat, anxiety	Antithyroid drugs, radioactive iodine
+PCOS	Irregular periods, weight gain, acne	Lifestyle changes, hormonal therapy
+Osteoporosis	Bone fragility, fractures, back pain	Calcium, vitamin D, medications
+Gout	Severe joint pain, redness, swelling	Anti-inflammatory drugs, dietary changes
+Scoliosis	Abnormal spine curvature, back pain	Bracing, physiotherapy, surgery
+Parkinson’s Disease	Tremors, rigidity, slow movement	Dopaminergic medications
+Alzheimer’s Disease	Memory loss, confusion, behavioral changes	Cognitive enhancers, supportive care
+Multiple Sclerosis	Muscle weakness, vision problems, fatigue	Immunomodulatory therapy
+Stroke	Sudden weakness, speech difficulty, vision loss	Clot-busting drugs, rehabilitation
+Coronary Artery Disease	Chest pain, shortness of breath, fatigue	Lifestyle changes, medications, surgery
+Heart Failure	Breathlessness, swelling, fatigue	Medications, lifestyle management
+Arrhythmia	Irregular heartbeat, dizziness, fainting	Medications, pacemaker
+Atherosclerosis	Chest pain, numbness, fatigue	Statins, lifestyle changes
+Varicose Veins	Swollen veins, leg pain, heaviness	Compression therapy, surgery
+Psoriasis	Red scaly patches, itching	Topical treatments, immunotherapy
+Eczema	Dry itchy skin, redness	Moisturizers, corticosteroids
+Acne	Pimples, oily skin, inflammation	Topical creams, antibiotics
+Vitiligo	Loss of skin pigmentation	Topical steroids, phototherapy
+Conjunctivitis	Red eyes, itching, discharge	Antibiotic or antihistamine eye drops
+Cataract	Cloudy vision, glare sensitivity	Surgical lens replacement
+Glaucoma	Vision loss, eye pain, headache	Eye drops, surgery
+Diabetic Retinopathy	Blurred vision, floaters	Laser therapy, glucose control
+Urinary Tract Infection	Burning urination, frequent urge, fever	Antibiotics, fluids
+Kidney Stones	Severe flank pain, blood in urine	Pain relief, hydration, surgery
+Prostate Enlargement	Weak urine flow, frequent urination	Medications, surgery
+Endometriosis	Pelvic pain, painful periods, infertility	Hormonal therapy, surgery
+Breast Cancer	Breast lump, skin changes, pain	Surgery, chemotherapy, radiation
+Lung Cancer	Chronic cough, weight loss, chest pain	Chemotherapy, radiation, surgery
+Colorectal Cancer	Blood in stool, abdominal pain, weight loss	Surgery, chemotherapy
+Leukemia	Fatigue, frequent infections, bruising	Chemotherapy, bone marrow transplant
+Lymphoma	Swollen lymph nodes, fever, weight loss	Chemotherapy, radiation
+Skin Cancer	Abnormal skin growths, lesions	Surgical removal, radiation
