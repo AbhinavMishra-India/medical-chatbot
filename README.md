@@ -6,6 +6,11 @@
 
 An intelligent medical chatbot that leverages LLMs (Large Language Models) and vector search to answer medical queries using information from the Gale Encyclopedia of Medicine.
 
+## ⚠️ Disclaimer
+This chatbot uses curated and reliable medical data.  
+Current coverage is focused and may not include all diseases.  
+The system is continuously being improved to expand its knowledge base and accuracy.
+
 ## Features
 - Natural language medical Q&A
 - Uses LangChain and HuggingFace for LLM integration
