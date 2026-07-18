@@ -1,11 +1,31 @@
 # macOS
 .DS_Store
-# Environment variables
-.env
-# Streamlit secrets/config
-.streamlit/
-# Python virtual environment
+
+# Python environment and caches
 .venv/
-# Other potential ignores (adjust as needed)
-*.log
 __pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+build/
+dist/
+pip-wheel-metadata/
+
+# Environment / secret files
+.env
+.env.*
+
+# Streamlit config and secrets
+.streamlit/
+
+# IDE/editor configs
+.vscode/
+.idea/
+
+# Generated reports and presentation exports
+medical-chatbot-ppt.pdf
+
+# Lock files and local Python version files
+uv.lock
+.python-version

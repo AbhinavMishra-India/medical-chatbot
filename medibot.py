@@ -1,5 +1,6 @@
 import os
 import streamlit as st
+from typing import Optional
 
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
@@ -8,6 +9,8 @@ from langchain_groq import ChatGroq
 from langchain import hub
 from langchain.chains import create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
+from langchain.schema import Document
+from ddgs import DDGS
 
 
 ## Uncomment the following files if you're not using pipenv as your virtual environment manager
@@ -16,12 +19,36 @@ load_dotenv()
 
 
 DB_FAISS_PATH="vectorstore/db_faiss"
+
 @st.cache_resource
 def get_vectorstore():
     embedding_model=HuggingFaceEmbeddings(model_name='sentence-transformers/all-MiniLM-L6-v2')
     db=FAISS.load_local(DB_FAISS_PATH, embedding_model, allow_dangerous_deserialization=True)
     return db
 
+@st.cache_resource
+def get_web_search_tool():
+    """Initialize DuckDuckGo search tool"""
+    return DDGS()
+
+def perform_web_search(query: str, search_tool: DDGS) -> Optional[str]:
+    """Perform web search and return results as a string."""
+    try:
+        # Search for medical information
+        search_query = f"{query} medical information healthcare"
+        results = search_tool.text(search_query, max_results=5)
+        
+        if results:
+            # Format results into a readable string
+            formatted_results = "\n".join([
+                f"- {result['title']}: {result['body']}"
+                for result in results
+            ])
+            return formatted_results if formatted_results else None
+        return None
+    except Exception as e:
+        st.warning(f"Web search unavailable: {str(e)}")
+        return None
 
 def set_custom_prompt(custom_prompt_template):
     prompt=PromptTemplate(template=custom_prompt_template, input_variables=["context", "question"])
@@ -103,9 +130,14 @@ def main():
 
 
             CUSTOM_PROMPT_TEMPLATE = """
-                Use the pieces of information provided in the context to answer user's question.
-                If you dont know the answer, just say that you dont know, dont try to make up an answer. 
-                Dont provide anything out of the given context
+                You are a medical chatbot assistant. Use the provided context to answer medical questions accurately.
+                
+                Guidelines:
+                - If the context contains relevant medical information, use it to answer.
+                - If context is limited or unclear, inform the user that you're using web sources.
+                - Always prioritize verified medical information.
+                - Be clear about the source of information.
+                - If uncertain, recommend consulting a healthcare professional.
 
                 Context: {context}
                 Question: {question}
@@ -131,11 +163,54 @@ def main():
             rag_chain = create_retrieval_chain(vectorstore.as_retriever(search_kwargs={'k': 3}), combine_docs_chain)
 
             response = rag_chain.invoke({'input': prompt})
-
+            context_docs = response["context"]
+            
+            # Check if we have good results from local knowledge base
+            has_good_local_results = len(context_docs) > 0
+            
+            # If limited local results or specific query terms, try web search
+            web_search_tool = get_web_search_tool()
+            if not has_good_local_results or "hl7" in prompt.lower() or "standard" in prompt.lower():
+                web_results = perform_web_search(prompt, web_search_tool)
+                if web_results:
+                    # Add web results as context
+                    web_doc = Document(
+                        page_content=web_results,
+                        metadata={"source": "web_search", "web_context": True}
+                    )
+                    context_docs.append(web_doc)
+                    # Re-invoke with enhanced context
+                    response = rag_chain.invoke({'input': prompt})
+            
             result = response["answer"]
+            
+            # Display sources
             print("\nSOURCE DOCUMENTS:")
+            local_sources = False
+            web_sources = False
             for doc in response["context"]:
+                if doc.metadata.get("web_context"):
+                    web_sources = True
+                else:
+                    local_sources = True
                 print(f"- {doc.metadata} -> {doc.page_content[:200]}...")
+            
+            # Add source attribution and disclaimer to response
+            if web_sources and not local_sources:
+                result = (
+                    "*Note: This answer includes information from web sources.*\n\n"
+                    "*Disclaimer: Internet sources may include unverified or changing content. "
+                    "Please validate with authoritative medical references or a healthcare professional.*\n\n"
+                    f"{result}"
+                )
+            elif web_sources and local_sources:
+                result = (
+                    "*Note: This answer combines local medical database and web sources.*\n\n"
+                    "*Disclaimer: Web-derived content is provided to improve coverage for topics not found in the local database. "
+                    "Please verify medical details with trusted sources or a licensed professional.*\n\n"
+                    f"{result}"
+                )
+            
             st.chat_message('assistant').markdown(result)
             st.session_state.messages.append({'role': 'assistant', 'content': result})
 
