@@ -96,4 +96,5 @@ urllib3==2.5.0; python_version >= '3.9'
 yaml==0.2.5
 yarl==1.20.1; python_version >= '3.9'
 zstandard==0.23.0; python_version >= '3.8'
+ddgs>=9.0.0
 duckduckgo_search>=9.0.0
