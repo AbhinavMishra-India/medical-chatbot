@@ -10,7 +10,6 @@ from langchain import hub
 from langchain.chains import create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain.schema import Document
-from ddgs import DDGS
 
 
 ## Uncomment the following files if you're not using pipenv as your virtual environment manager
@@ -29,10 +28,22 @@ def get_vectorstore():
 @st.cache_resource
 def get_web_search_tool():
     """Initialize DuckDuckGo search tool"""
+    try:
+        from ddgs import DDGS
+    except ModuleNotFoundError:
+        st.warning(
+            "Optional web search is unavailable because the `ddgs` package is not installed. "
+            "Install `ddgs>=9.0.0` and redeploy to enable web search."
+        )
+        return None
+
     return DDGS()
 
-def perform_web_search(query: str, search_tool: DDGS) -> Optional[str]:
+def perform_web_search(query: str, search_tool) -> Optional[str]:
     """Perform web search and return results as a string."""
+    if search_tool is None:
+        return None
+
     try:
         # Search for medical information
         search_query = f"{query} medical information healthcare"
